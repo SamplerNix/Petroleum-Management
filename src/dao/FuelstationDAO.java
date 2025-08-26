@@ -86,4 +86,15 @@ public class FuelstationDAO {
             return ps.executeUpdate() == 1;
         }
     }
+    // Delete a station by ID
+    public boolean deleteStation(int stationId) throws SQLException {
+        String sql = "DELETE FROM fuel_station WHERE station_id = ?";
+        try (Connection conn = DButil.getconnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, stationId);
+            return ps.executeUpdate() == 1;
+        }
+    }
+
 }

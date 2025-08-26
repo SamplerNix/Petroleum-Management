@@ -70,4 +70,28 @@ public class SalesDAO {
         }
         return salesList;
     }
+    public List<sales> getRecentSales(int limit) throws SQLException {
+        List<sales> salesList = new ArrayList<>();
+        String sql = "SELECT * FROM sales_table ORDER BY timestamp DESC LIMIT ?";
+
+        try (Connection conn = DButil.getconnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, limit);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                sales sale = new sales();
+                sale.setSalesid(rs.getInt("sale_id"));
+                sale.setStationid(rs.getInt("station_id"));
+                sale.setFueltypeid(rs.getInt("fuel_type_id"));
+                sale.setQuantityliters(rs.getDouble("quantity_liters"));
+                sale.setTotalprice(rs.getDouble("total_price"));
+                sale.setSoldby(rs.getString("sold_by"));
+                salesList.add(sale);
+            }
+        }
+        return salesList;
+    }
+
 }

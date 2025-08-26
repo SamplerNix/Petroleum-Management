@@ -1,5 +1,7 @@
 package model;
 
+import java.sql.Timestamp;
+
 public class sales {
     private int salesid;
     private int stationid;
@@ -7,8 +9,12 @@ public class sales {
     private double quantityliters;
     private double totalprice;
     private String Soldby;
-    // this is where getter is started
+    private Timestamp timestamp;
 
+// this is where getter is started
+public Timestamp getTimestamp() {
+    return timestamp;
+}
 
     public int getSalesid() {
         return salesid;
@@ -34,6 +40,11 @@ public class sales {
         return Soldby;
     }
     // this is where setter is started
+
+
+    public void setTimestamp(Timestamp timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public void setSalesid(int salesid) {
         this.salesid = salesid;

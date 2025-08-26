@@ -103,4 +103,17 @@ public class FuelinventoryDAO {
             return ps.executeUpdate() == 1;
         }
     }
+    public double getTotalFuelQuantity() throws SQLException {
+        String sql = "SELECT SUM(quantity_liters) AS total FROM fuel_inventory";
+        try (Connection conn = DButil.getconnection();
+             PreparedStatement ps = conn.prepareStatement(sql);
+             ResultSet rs = ps.executeQuery()) {
+
+            if (rs.next()) {
+                return rs.getDouble("total");
+            }
+        }
+        return 0.0;
+    }
+
 }
