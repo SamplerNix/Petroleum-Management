@@ -31,7 +31,7 @@ public class Inventoryserverlets extends HttpServlet {
             } else if (action.equals("delete")) {
                 deleteInventory(request, response);
             } else {
-                response.sendRedirect("jsp/inventory.jsp");
+                response.sendRedirect("jsp/fuelinventory.jsp");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -76,7 +76,7 @@ public class Inventoryserverlets extends HttpServlet {
 
         List<Fuel_inventory> inventories = inventoryDAO.getAllInventories();
         request.setAttribute("inventories", inventories);
-        request.getRequestDispatcher("jsp/inventory.jsp").forward(request, response);
+        request.getRequestDispatcher("jsp/fuelinventory.jsp").forward(request, response);
     }
 
     private void deleteInventory(HttpServletRequest request, HttpServletResponse response)

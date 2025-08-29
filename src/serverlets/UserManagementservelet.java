@@ -120,6 +120,6 @@ public class UserManagementservelet extends HttpServlet {
         int userId = Integer.parseInt(request.getParameter("user_id"));
         User user = userDAO.getUserById(userId);
         request.setAttribute("user", user);
-        request.getRequestDispatcher("jsp/user_form.jsp").forward(request, response);
+//        request.getRequestDispatcher("jsp/user_form.jsp").forward(request, response);
     }
 }
