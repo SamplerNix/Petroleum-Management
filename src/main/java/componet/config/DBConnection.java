@@ -2,6 +2,8 @@ package componet.config;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 
 public class DBConnection {
     private static final String URL = "jdbc:postgresql://localhost:5432/petrolium_management";
@@ -27,4 +29,9 @@ public class DBConnection {
 
         return conn;
     }
+
+	public static void close(Connection con, PreparedStatement ps, ResultSet rs) {
+		// TODO Auto-generated method stub
+		
+	}
 }
