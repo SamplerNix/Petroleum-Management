@@ -12,14 +12,14 @@ import java.time.LocalDate;
 
 @WebServlet("/DashboardServlet")
 public class DashboardServlet extends HttpServlet {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 
-	protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Verify session
         HttpSession session = request.getSession(false);
         User user = (session != null) ? (User) session.getAttribute("user") : null;
 
@@ -28,37 +28,49 @@ public class DashboardServlet extends HttpServlet {
             return;
         }
 
+        // Database queries
         try (Connection conn = DBConnection.getConnection()) {
-            // 1. Total Stations
-            PreparedStatement ps1 = conn.prepareStatement("SELECT COUNT(*) FROM fuel_stations");
-            ResultSet rs1 = ps1.executeQuery();
-            int totalStations = rs1.next() ? rs1.getInt(1) : 0;
 
-            // 2. Total Fuel Types
-            PreparedStatement ps2 = conn.prepareStatement("SELECT COUNT(*) FROM fueltypes");
-            ResultSet rs2 = ps2.executeQuery();
-            int totalFuelTypes = rs2.next() ? rs2.getInt(1) : 0;
+            // 1️⃣ Total Stations
+            int totalStations = 0;
+            try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM fuel_station");
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) totalStations = rs.getInt(1);
+            }
 
-            // 3. Today's Sales Total
-            PreparedStatement ps3 = conn.prepareStatement(
-                    "SELECT COALESCE(SUM(total_price), 0) FROM sales_table WHERE DATE(timestamp) = ?");
-            ps3.setDate(1, Date.valueOf(LocalDate.now()));
-            ResultSet rs3 = ps3.executeQuery();
-            double todaySales = rs3.next() ? rs3.getDouble(1) : 0.0;
+            // 2️⃣ Total Fuel Types
+            int totalFuelTypes = 0;
+            try (PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM fueltype");
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) totalFuelTypes = rs.getInt(1);
+            }
 
-            // 4. Low Fuel Inventory
-            PreparedStatement ps4 = conn.prepareStatement(
+            // 3️⃣ Today's Total Sales
+            double todaySales = 0.0;
+            try (PreparedStatement ps = conn.prepareStatement(
+                    "SELECT COALESCE(SUM(total_price), 0) FROM sales_table WHERE DATE(timestamp) = ?")) {
+                ps.setDate(1, Date.valueOf(LocalDate.now()));
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) todaySales = rs.getDouble(1);
+                }
+            }
+
+            // 4️⃣ Low Stock Alert
+            int lowStockCount = 0;
+            try (PreparedStatement ps = conn.prepareStatement(
                     "SELECT COUNT(*) FROM fuel_inventory WHERE quantity_liters < 500");
-            ResultSet rs4 = ps4.executeQuery();
-            int lowStockCount = rs4.next() ? rs4.getInt(1) : 0;
+                 ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) lowStockCount = rs.getInt(1);
+            }
 
-            // Pass data to JSP
+            // Pass all attributes to JSP
             request.setAttribute("user", user);
             request.setAttribute("totalStations", totalStations);
             request.setAttribute("totalFuelTypes", totalFuelTypes);
             request.setAttribute("todaySales", todaySales);
             request.setAttribute("lowStockCount", lowStockCount);
 
+            // Forward to dashboard
             request.getRequestDispatcher("JSP/dashboard.jsp").forward(request, response);
 
         } catch (SQLException e) {

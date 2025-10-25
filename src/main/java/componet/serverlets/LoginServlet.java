@@ -29,7 +29,9 @@ public class LoginServlet extends HttpServlet {
         if (user != null) {
             HttpSession session = request.getSession();
             session.setAttribute("user", user);
-            response.sendRedirect("JSP/dashboard.jsp"); // Redirect to dashboard page
+            session.setAttribute("user_id",user.getUserId());
+            response.sendRedirect(request.getContextPath() + "/DashboardServlet");
+ // Redirect to dashboard page
         } else {
             request.setAttribute("errorMsg", "Invalid username or password.");
             request.getRequestDispatcher("JSP/login.jsp").forward(request, response);

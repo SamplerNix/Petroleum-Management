@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import componet.Dao.FuelTypeDAO;
 import componet.model.FuelType;	
 
-@WebServlet("/fueltype")
+@WebServlet("/FuelTypeServlet")
 public class FuelTypeServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private FuelTypeDAO fuelTypeDAO;

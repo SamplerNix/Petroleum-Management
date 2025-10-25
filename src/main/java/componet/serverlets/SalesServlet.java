@@ -35,13 +35,13 @@ public class SalesServlet extends HttpServlet {
         // Call DAO to insert the sale
         SalesDAO dao = new SalesDAO();
         boolean success = dao.recordSale(fuelTypeId, stationId, quantity, userId);
-
         if (success) {
-            response.sendRedirect("/JSP/dashboard.jsp");
+            response.sendRedirect(request.getContextPath() + "/DashboardServlet");
         } else {
             request.setAttribute("error", "Sale could not be recorded.");
-            request.getRequestDispatcher("/JSP/sales.jsp").forward(request, response); // Correct path
+            request.getRequestDispatcher("/JSP/sales.jsp").forward(request, response);
         }
+
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

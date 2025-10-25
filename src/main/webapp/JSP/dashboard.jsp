@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="componet.model.User" %>
 <%
-    HttpSession sessio = request.getSession(false);
-    User user = (session != null) ? (User) session.getAttribute("user") : null;
+HttpSession sessio = request.getSession(false);
+User user = (session != null) ? (User) session.getAttribute("user") : null;
     if (user == null) {
         response.sendRedirect("login.jsp");
         return;
@@ -91,11 +91,14 @@
                 <h3>Total Stations</h3>
                 <p><%= request.getAttribute("totalStations") %></p>
             </div>
-            <div class="card">
-                <h3>Fuel Types</h3>
-                <p><%= request.getAttribute("totalFuelTypes") %></p>
-            </div>
-            <div class="card">
+            <div class="card" 
+     style="cursor:pointer;" 
+     onclick="window.location.href='${pageContext.request.contextPath}/FuelTypeServlet';">
+    <h3>Fuel Types</h3>
+    <p><%= request.getAttribute("totalFuelTypes") %></p>
+</div>
+            
+            <div class="card" style="cursor:pointer;" onclick="window.location.href='${pageContext.request.contextPath}/SalesServlet';">>
                 <h3>Today's Sales</h3>
                 <p>₹ <%= request.getAttribute("todaySales") %></p>
             </div>
